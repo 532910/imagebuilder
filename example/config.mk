@@ -1,2 +1,1 @@
-BUILDDIR = /tmp
 RELEASE = 19.07.7

@@ -1,23 +1,28 @@
-# TODO: auto version update
-
-include config.mk
+-include config.mk
 include ${C}/config.mk
 
-MIRROR = https://downloads.openwrt.org
-BUILDDIR ?= .
+BUILDDIR := $(shell mktemp -d -t imgbldr-XXXXX)
+BASEDIR := $(dir $(realpath $(firstword ${MAKEFILE_LIST})))
 
-#CONFIGS = $(wildcard $C/install.d/* $C/remove.d/*)
-CONFIGS = config.mk ${C}/config.mk
-DEPS = $(shell find $C/install.d $C/remove.d $C/files -type f,l) ${CONFIGS}
+FILES = ${BUILDDIR}/files
+#files = files
+
+#CONFIGS = config.mk ${C}/config.mk
+#DEPS += $(shell find ${files} -type f,l)
+#DEPS += $(shell [ -d ${C}/files ] && find ${C}/files -type f,l)
+#DEPS += ${CONFIGS}
+
+HOSTS ?= ${C}
+
+IMAGE ?= squashfs-sysupgrade.bin
 
 imagebuilder ?= openwrt-imagebuilder-${RELEASE}-${TARGET}-${SUBTARGET}.Linux-x86_64
 
 image ?= openwrt-${RELEASE}-${TARGET}-${SUBTARGET}-${PLATFORM}-${IMAGE}
-#image = ${imagebuilder}/bin/targets/${TARGET}/${SUBTARGET}/openwrt-${RELEASE}-${TARGET}-${SUBTARGET}-${PLATFORM}-${IMAGE}
 
 comment = \#%
-parts = $(filter-out ${comment}, $(foreach f,$(wildcard $C/$1.d/*),$(file < $f)))
-PACKAGES = $(addprefix -,$(call parts,remove)) $(call parts,install)
+parts = $(filter-out ${comment}, $(foreach f,$1,$(file < ${BASEDIR}/lists/$f)))
+PACKAGES = $(addprefix -,$(call parts,${REMOVE_LISTS})) $(addprefix -,$(foreach p,${REMOVE_PKGS},$p)) $(call parts,${INSTALL_LISTS}) $(foreach p,${INSTALL_PKGS},$p)
 
 
 all: copy
@@ -35,9 +40,24 @@ ${imagebuilder}.tar.xz:
 
 image: ${C}/${image}
 
-${C}/${image}: ${BUILDDIR}/${imagebuilder} ${DEPS}
-	umask 022; $(MAKE) -C $< image PROFILE=${PLATFORM} PACKAGES="${PACKAGES}" FILES=${CURDIR}/${C}/files/
+install = rsync --mkpath ${1} ${FILES}${2}
+
+${FILES}:
+	mkdir ${FILES}
+	${FILES_INSTALL}
+	[ ! -d ${C}/files ] || cp -r -T -f ${C}/files ${FILES}
+
+files: ${FILES}
+
+
+${C}/${image}: ${BUILDDIR}/${imagebuilder} ${FILES} ${DEPS}
+	umask 022; $(MAKE) -C $< image PROFILE=${PLATFORM} PACKAGES="${PACKAGES}" FILES=${FILES}
 	cp ${BUILDDIR}/${imagebuilder}/bin/targets/${TARGET}/${SUBTARGET}/${image} $@
+ifndef LEAVE_BUILD
+	rm -rf ${BUILDDIR}
+else
+	@echo ${BUILDDIR}
+endif
 
 copy: ${C}/${image}
 	$(foreach h,${HOSTS},scp $< $h:/tmp&)
@@ -45,10 +65,4 @@ copy: ${C}/${image}
 install: copy
 	$(foreach h,${HOSTS},ssh $h sysupgrade -v /tmp/${image}&)
 
-clean:
-	$(RM) -r ${BUILDDIR}/${imagebuilder}
-
-distclean: clean
-	$(RM) ${imagebuilder}.tar.xz ${image}
-
-.PHONY: clean distclean copy listpks image
+.PHONY: copy listpks image
