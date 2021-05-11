@@ -18,9 +18,9 @@ It's intended to be simple and to use package templates from text files.
 ```
 Where `cfg_name` is a folder containing the configuration described in `config.mk`.
 
-- `image`: build the image and put it into the `cfg_name` folder.
-- `copy`: scp image to each host in `HOSTS`
-- `install`: do sysupgrade
+- `image`: Build image and put it into the `cfg_name` folder.
+- `copy`: Make image and scp it to each host in `HOSTS`.
+- `install`: All above and sysupgrade. Use with caution!
 
 
 ### Debug
