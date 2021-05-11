@@ -56,6 +56,8 @@ Not all imagebuilder archives and image files match the patterns:
 `openwrt-imagebuilder-${RELEASE}-${TARGET}-${SUBTARGET}.Linux-x86_64`
 `openwrt-${RELEASE}-${TARGET}-${SUBTARGET}-${PLATFORM}-${IMAGE}`
 
+[Forum thread](https://forum.openwrt.org/t/image-name-format).
+
 For example `x86/64/Generic` requires:
 
 ```
@@ -84,7 +86,7 @@ The upper level `config.mk` is included for all configurations.
 
 ## OpenWrt release
 It looks like there is no simple and clear way to get the latest release.
-https://forum.openwrt.org/t/how-to-find-the-latest-release-from-script
+[Forum thread](https://forum.openwrt.org/t/how-to-find-the-latest-release-from-script).
 So `RELEASE` must be defined in `config.mk` or from commandline for now.
 ```
 % make C=cfg_name RELEASE=19.07.7 image
