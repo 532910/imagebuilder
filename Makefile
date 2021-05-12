@@ -1,4 +1,9 @@
 -include config.mk
+
+ifndef C
+$(error C must be defined)
+endif
+
 include ${C}/config.mk
 
 BUILDDIR := $(shell mktemp -d -t imgbldr-XXXXX)
