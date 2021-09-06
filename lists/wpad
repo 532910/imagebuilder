@@ -1,2 +1,2 @@
--wpad-basic
-wpad-openssl
+-wpad-basic-wolfssl
+wpad-wolfssl

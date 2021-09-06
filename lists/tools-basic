@@ -16,3 +16,6 @@ mtr
 #less-wide
 pv
 losetup
+make
+curl
+wget
