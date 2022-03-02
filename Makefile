@@ -27,7 +27,8 @@ image ?= openwrt-${RELEASE}-${TARGET}-${SUBTARGET}-${PLATFORM}-${IMAGE}
 
 comment = \#%
 parts = $(filter-out ${comment}, $(foreach f,$1,$(file < ${BASEDIR}/lists/$f)))
-PACKAGES = $(addprefix -,$(call parts,${REMOVE_LISTS})) $(addprefix -,$(foreach p,${REMOVE_PKGS},$p)) $(call parts,${INSTALL_LISTS}) $(foreach p,${INSTALL_PKGS},$p)
+#PACKAGES = $(addprefix -,$(call parts,${REMOVE_LISTS})) $(addprefix -,$(foreach p,${REMOVE_PKGS},$p)) $(call parts,${INSTALL_LISTS}) $(foreach p,${INSTALL_PKGS},$p)
+PACKAGES = $(addprefix -,$(call parts,${REMOVE_LISTS})) $(addprefix -,$(foreach p,${REMOVE_PKGS},$p)) $(call parts,${INSTALL_LISTS}) $(filter-out ${comment}, $(foreach p,${INSTALL_PKGS},$p))
 
 
 all: copy
