@@ -5,6 +5,7 @@ grep
 bind-host
 diffutils
 hostapd-utils
+iwinfo
 ip-bridge
 ip-full
 lsof
