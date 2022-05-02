@@ -1,0 +1,8 @@
+TODO: комментарии работают как говно: make парсит по словам, не по строкам
+
+packets present in vanilla image:
+rpcd-mod-rrdns
+luci-app-nlbwmon
+luci
+luci-ssl
+px5g-wolfssl
