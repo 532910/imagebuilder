@@ -66,7 +66,7 @@ else
 endif
 
 copy: ${C}/${image}
-	$(foreach h,${HOSTS},scp $< $h:/tmp&)
+	$(foreach h,${HOSTS},scp ${SCPOPTS} $< $h:/tmp&)
 
 install: copy
 	$(foreach h,${HOSTS},ssh $h sysupgrade -v /tmp/${image}&)
