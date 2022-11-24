@@ -20,3 +20,4 @@ make
 curl
 wget-ssl
 rsync
+wakeonlan
