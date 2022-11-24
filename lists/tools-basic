@@ -1,5 +1,4 @@
-#-ubox
-#kmod
+kmod
 dmesg
 grep
 bind-host
@@ -14,9 +13,10 @@ tcpdump
 terminfo
 iperf3
 mtr
-#less-wide
+less-wide
 pv
 losetup
 make
 curl
-wget
+wget-ssl
+rsync
