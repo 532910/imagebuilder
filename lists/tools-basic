@@ -9,6 +9,7 @@ ip-bridge
 ip-full
 lsof
 lscpu
+lsblk
 tcpdump
 terminfo
 iperf3
