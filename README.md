@@ -2,7 +2,7 @@
 
 ## A simple Makefile wrapper for [OpenWrt imagebuilder](https://openwrt.org/docs/guide-user/additional-software/imagebuilder)
 
-It's intended to be simple and to use package templates from text files.
+It is a simple tool that uses package templates from text files.
 
 [Other frontends](https://openwrt.org/docs/guide-developer/imagebuilder_frontends)
 
@@ -25,8 +25,8 @@ Where `cfg_name` is a folder containing the configuration described in `config.m
 
 ### Debug
 
-The build will be performed in the `/tmp/imgbldr-XXXXX` folder which will be removed afterwards.
-To leave it for debug set `LEAVE_BUILD`:
+The build will be performed in `/tmp/imgbldr-XXXXX` folder, which will be removed afterwards.
+To leave it for debug, set `LEAVE_BUILD`:
 ```
 % make LEAVE_BUILD=yes C=example image
 ```
@@ -40,7 +40,7 @@ Use `listpks` target to check [`PACKAGES`](https://openwrt.org/docs/guide-user/a
 
 ## Configuration
 
-See `example` for instance.
+See `example` to get instances.
 
 ### `cfg_name/config.mk`
 
@@ -49,7 +49,7 @@ At least `TARGET`, `SUBTARGET` and `PLATFORM` must be defined.
 `HOSTS` is set to `cfg_name` by default and required for `copy` and `install` targets.
 
 `IMAGE` is the last part of the image file.
-The default is `squashfs-sysupgrade.bin` which is fine for the most cases.
+The default is `squashfs-sysupgrade.bin` which is fine for most cases.
 
 Not all imagebuilder archives and image files match the patterns:
 
@@ -58,7 +58,7 @@ Not all imagebuilder archives and image files match the patterns:
 
 [Forum thread](https://forum.openwrt.org/t/image-name-format).
 
-For example `x86/64/Generic` requires:
+For example, `x86/64/Generic` requires:
 
 ```
 IMAGE = combined-squashfs.img.gz
@@ -87,7 +87,7 @@ The upper level `config.mk` is included for all configurations.
 ## OpenWrt release
 It looks like there is no simple and clear way to get the latest release.
 [Forum thread](https://forum.openwrt.org/t/how-to-find-the-latest-release-from-script).
-So `RELEASE` must be defined in `config.mk` or from commandline for now.
+So `RELEASE` must be defined in `config.mk` or from the command line for now.
 ```
 % make C=cfg_name RELEASE=19.07.7 image
 ```
