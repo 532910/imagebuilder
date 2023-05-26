@@ -59,7 +59,6 @@ Not all imagebuilder archives and image files match the patterns:
 [Forum thread](https://forum.openwrt.org/t/image-name-format).
 
 For example, `x86/64/Generic` requires:
-
 ```
 IMAGE = combined-squashfs.img.gz
 image = openwrt-${RELEASE}-${TARGET}-${SUBTARGET}-${IMAGE}
@@ -76,10 +75,10 @@ image = openwrt-${RELEASE}-${TARGET}-${PLATFORM}-${IMAGE}
 
 `INSTALL_PKGS` and `REMOVE_PKGS` contain individual package names.
 
-In addition to `cfg/files` directory
-`FILES_INSTALL` defines files copy into
-[`FILES`](https://openwrt.org/docs/guide-user/additional-software/imagebuilder#files_variable)
-and to be included in the image.
+Files from `cfg_name/files` directory as well as `FILES_INSTALL` instructions
+will populate a directory passed to
+[`FILES`](https://openwrt.org/docs/guide-user/additional-software/imagebuilder#custom_files)
+and thus be included into the image.
 
 ### `config.mk`
 The upper level `config.mk` is included for all configurations.
@@ -87,7 +86,7 @@ The upper level `config.mk` is included for all configurations.
 ## OpenWrt release
 It looks like there is no simple and clear way to get the latest release.
 [Forum thread](https://forum.openwrt.org/t/how-to-find-the-latest-release-from-script).
-So `RELEASE` must be defined in `config.mk` or from the command line for now.
+So `RELEASE` must be defined in `config.mk` or from the command line for now:
 ```
-% make C=cfg_name RELEASE=19.07.7 image
+% make C=cfg_name RELEASE=22.03.5 image
 ```
