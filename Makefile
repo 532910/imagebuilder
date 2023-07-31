@@ -18,6 +18,7 @@ FILES = ${BUILDDIR}/files
 #DEPS += ${CONFIGS}
 
 HOSTS ?= ${C}
+SCPOPTS = -O
 
 IMAGE ?= squashfs-sysupgrade.bin
 
