@@ -53,7 +53,7 @@ ${BUILDDIR}/${imagebuilder}: ${CACHE}/${imagebuilder}.tar.xz ${BUILDDIR}
 	tar --touch -C ${BUILDDIR} -xf $<
 
 ${CACHE}/${imagebuilder}.tar.xz: ${CACHE}
-	wget --directory-prefix $< --continue ${DOWNLOADS_BASE}/${@F}
+	curl --remote-name --continue-at - --output-dir $< ${DOWNLOADS_BASE}/${@F}
 
 image: ${C}/${image}
 
