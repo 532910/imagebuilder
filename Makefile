@@ -12,6 +12,10 @@ BASEDIR := $(dir $(realpath $(firstword ${MAKEFILE_LIST})))
 FILES = ${BUILDDIR}/files
 #files = files
 
+CACHE = cache/${RELEASE}
+DOWNLOADS_BASE = https://downloads.openwrt.org/releases/${RELEASE}/targets/${TARGET}/${SUBTARGET}
+INSTRUCTION_SET = $(shell curl -s ${DOWNLOADS_BASE}/profiles.json | jq -r .arch_packages)
+
 #CONFIGS = config.mk ${C}/config.mk
 #DEPS += $(shell find ${files} -type f,l)
 #DEPS += $(shell [ -d ${C}/files ] && find ${C}/files -type f,l)
@@ -37,16 +41,19 @@ all: copy
 listpks:
 	@echo ${PACKAGES}
 
+${CACHE}:
+	mkdir --parents $@
+
 ${BUILDDIR}:
 	mkdir --parents $@
 
 imagebuilder: ${BUILDDIR}/${imagebuilder}
 
-${BUILDDIR}/${imagebuilder}: ${imagebuilder}.tar.xz ${BUILDDIR}
+${BUILDDIR}/${imagebuilder}: ${CACHE}/${imagebuilder}.tar.xz ${BUILDDIR}
 	tar --touch -C ${BUILDDIR} -xf $<
 
-${imagebuilder}.tar.xz:
-	wget -c https://downloads.openwrt.org/releases/${RELEASE}/targets/${TARGET}/${SUBTARGET}/$@
+${CACHE}/${imagebuilder}.tar.xz: ${CACHE}
+	wget --directory-prefix $< --continue ${DOWNLOADS_BASE}/${@F}
 
 image: ${C}/${image}
 
@@ -61,7 +68,7 @@ files: ${FILES}
 
 
 ${C}/${image}: ${BUILDDIR}/${imagebuilder} ${FILES} ${DEPS}
-	umask 022; $(MAKE) -C $< image PROFILE=${PLATFORM} PACKAGES="${PACKAGES}" FILES=${FILES}
+	umask 022; $(MAKE) -C $< image PROFILE=${PLATFORM} PACKAGES="${PACKAGES}" FILES=${FILES} CONFIG_DOWNLOAD_FOLDER=$(realpath ${CACHE})/${INSTRUCTION_SET}
 	cp ${BUILDDIR}/${imagebuilder}/bin/targets/${TARGET}/${SUBTARGET}/${image} $@
 ifndef LEAVE_BUILD
 	rm -rf ${BUILDDIR}
