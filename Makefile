@@ -6,7 +6,7 @@ endif
 
 include ${C}/config.mk
 
-BUILDDIR := $(shell mktemp -d -t imgbldr-XXXXX)
+BUILDDIR := $(shell mktemp --dry-run --directory -t imgbldr-XXXXX)
 BASEDIR := $(dir $(realpath $(firstword ${MAKEFILE_LIST})))
 
 FILES = ${BUILDDIR}/files
@@ -37,9 +37,12 @@ all: copy
 listpks:
 	@echo ${PACKAGES}
 
+${BUILDDIR}:
+	mkdir --parents $@
+
 imagebuilder: ${BUILDDIR}/${imagebuilder}
 
-${BUILDDIR}/${imagebuilder}: ${imagebuilder}.tar.xz
+${BUILDDIR}/${imagebuilder}: ${imagebuilder}.tar.xz ${BUILDDIR}
 	tar --touch -C ${BUILDDIR} -xf $<
 
 ${imagebuilder}.tar.xz:
