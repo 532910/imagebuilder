@@ -4,7 +4,7 @@ ifndef C
 $(error C must be defined)
 endif
 
-include ${C}/config.mk
+include $C/config.mk
 
 BUILDDIR := $(shell mktemp --dry-run --directory -t imgbldr-XXXXX)
 BASEDIR := $(dir $(realpath $(firstword ${MAKEFILE_LIST})))
@@ -16,12 +16,12 @@ CACHE = cache/${RELEASE}
 DOWNLOADS_BASE = https://downloads.openwrt.org/releases/${RELEASE}/targets/${TARGET}/${SUBTARGET}
 INSTRUCTION_SET = $(shell curl -s ${DOWNLOADS_BASE}/profiles.json | jq -r .arch_packages)
 
-CONFIGS = config.mk ${C}/config.mk
+CONFIGS = config.mk $C/config.mk
 DEPS += $(shell find ${files} -type f,l)
-DEPS += $(shell [ -d ${C}/files ] && find ${C}/files -type f,l)
+DEPS += $(shell [ -d $C/files ] && find $C/files -type f,l)
 DEPS += ${CONFIGS}
 
-HOSTS ?= ${C}
+HOSTS ?= $C
 SCPOPTS = -O
 
 IMAGE ?= squashfs-sysupgrade.bin
@@ -55,19 +55,19 @@ ${BUILDDIR}/${imagebuilder}: ${CACHE}/${imagebuilder}.tar.xz ${BUILDDIR}
 ${CACHE}/${imagebuilder}.tar.xz: | ${CACHE}
 	curl --remote-name --continue-at - --output-dir $| ${DOWNLOADS_BASE}/${@F}
 
-image: ${C}/${image}
+image: $C/${image}
 
 install = rsync --mkpath ${1} ${FILES}${2}
 
 ${FILES}:
 	mkdir ${FILES}
 	${FILES_INSTALL}
-	[ ! -d ${C}/files ] || cp -r -T -f ${C}/files ${FILES}
+	[ ! -d $C/files ] || cp -r -T -f $C/files ${FILES}
 
 files: ${FILES}
 
 
-${C}/${image}: ${BUILDDIR}/${imagebuilder} ${FILES} ${DEPS}
+$C/${image}: ${BUILDDIR}/${imagebuilder} ${FILES} ${DEPS}
 	umask 022; $(MAKE) -C $< image PROFILE=${PLATFORM} PACKAGES="${PACKAGES}" FILES=${FILES} CONFIG_DOWNLOAD_FOLDER=$(realpath ${CACHE})/${INSTRUCTION_SET}
 	cp ${BUILDDIR}/${imagebuilder}/bin/targets/${TARGET}/${SUBTARGET}/${image} $@
 ifndef LEAVE_BUILD
@@ -76,7 +76,7 @@ else
 	@echo ${BUILDDIR}
 endif
 
-copy: ${C}/${image}
+copy: $C/${image}
 	$(foreach h,${HOSTS},scp ${SCPOPTS} $< $h:/tmp&)
 
 install: copy
