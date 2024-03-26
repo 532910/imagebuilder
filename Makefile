@@ -10,16 +10,16 @@ BUILDDIR := $(shell mktemp --dry-run --directory -t imgbldr-XXXXX)
 BASEDIR := $(dir $(realpath $(firstword ${MAKEFILE_LIST})))
 
 FILES = ${BUILDDIR}/files
-#files = files
+files = files
 
 CACHE = cache/${RELEASE}
 DOWNLOADS_BASE = https://downloads.openwrt.org/releases/${RELEASE}/targets/${TARGET}/${SUBTARGET}
 INSTRUCTION_SET = $(shell curl -s ${DOWNLOADS_BASE}/profiles.json | jq -r .arch_packages)
 
-#CONFIGS = config.mk ${C}/config.mk
-#DEPS += $(shell find ${files} -type f,l)
-#DEPS += $(shell [ -d ${C}/files ] && find ${C}/files -type f,l)
-#DEPS += ${CONFIGS}
+CONFIGS = config.mk ${C}/config.mk
+DEPS += $(shell find ${files} -type f,l)
+DEPS += $(shell [ -d ${C}/files ] && find ${C}/files -type f,l)
+DEPS += ${CONFIGS}
 
 HOSTS ?= ${C}
 SCPOPTS = -O
@@ -52,8 +52,8 @@ imagebuilder: ${BUILDDIR}/${imagebuilder}
 ${BUILDDIR}/${imagebuilder}: ${CACHE}/${imagebuilder}.tar.xz ${BUILDDIR}
 	tar --touch -C ${BUILDDIR} -xf $<
 
-${CACHE}/${imagebuilder}.tar.xz: ${CACHE}
-	curl --remote-name --continue-at - --output-dir $< ${DOWNLOADS_BASE}/${@F}
+${CACHE}/${imagebuilder}.tar.xz: | ${CACHE}
+	curl --remote-name --continue-at - --output-dir $| ${DOWNLOADS_BASE}/${@F}
 
 image: ${C}/${image}
 
@@ -83,3 +83,4 @@ install: copy
 	$(foreach h,${HOSTS},ssh $h sysupgrade -v /tmp/${image}&)
 
 .PHONY: copy listpks image
+.SECONDARY: ${BUILDDIR} ${BUILDDIR}/${imagebuilder} ${FILES}
