@@ -1,2 +1,10 @@
-zsh
-mc
+#
+bind-host      #  2.6mb
+wakeonlan      #  1.3mb
+
+ripgrep        #  2.1mb
+wget-ssl       #  1.7mb
+zsh            #  2.0mb
+mc             #  3.3mb
+
+# 7.9mb

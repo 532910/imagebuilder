@@ -31,7 +31,7 @@ imagebuilder ?= openwrt-imagebuilder-${RELEASE}-${TARGET}-${SUBTARGET}.Linux-x86
 image ?= openwrt-${RELEASE}-${TARGET}-${SUBTARGET}-${PLATFORM}-${IMAGE}
 
 comment = \#%
-parts = $(filter-out ${comment}, $(foreach f,$1,$(file < ${BASEDIR}/lists/$f)))
+parts = $(filter-out ${comment}, $(foreach f,$1,$(shell grep -o '^[^# ]*' ${BASEDIR}/lists/$f)))
 PACKAGES = \
 	$(addprefix -,$(call parts,${REMOVE_LISTS})) \
 	$(addprefix -,$(foreach p,${REMOVE_PKGS},$p)) \

@@ -1,0 +1,12 @@
+#
+ethtool-full   #   151.7kb 
+ip-bridge      #    35.4kb
+ip-full        #   401.0kb
+tcpdump        #   414.1kb
+iperf          #   667.8kb
+iperf3         #    61.1kb
+mtr-json       #   198.4kb
+#mtr-nojson    #   178.3kb
+curl           #   294.4kb
+rsync          #   204.4kb
+# 2381.1kb

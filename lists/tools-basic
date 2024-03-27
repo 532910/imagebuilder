@@ -1,25 +1,16 @@
-kmod
-dmesg
-grep
-bind-host
-diffutils
-hostapd-utils
-iwinfo
-ip-bridge
-ip-full
-ethtool-full
-lsof
-lscpu
-lsblk
-tcpdump
-terminfo
-iperf3
-mtr
-less-wide
-pv
-losetup
-make
-curl
-wget-ssl
-rsync
-wakeonlan
+#
+terminfo       #     8.7kb
+kmod           #    86.5kb
+dmesg          #   171.7kb
+grep           #   191.5kb
+less           #   205.5kb
+pv             #    20.9kb
+losetup        #    76.6kb
+lsof           #   111.0kb
+lscpu          #    82.6kb
+lsblk          #   329.8kb
+make           #    81.3kb
+diffutils      #   109.2kb
+pciutils       #   437.1kb
+strace         #   305.6kb
+# 1954.6kb
