@@ -32,9 +32,12 @@ image ?= openwrt-${RELEASE}-${TARGET}-${SUBTARGET}-${PLATFORM}-${IMAGE}
 
 comment = \#%
 parts = $(filter-out ${comment}, $(foreach f,$1,$(file < ${BASEDIR}/lists/$f)))
-#PACKAGES = $(addprefix -,$(call parts,${REMOVE_LISTS})) $(addprefix -,$(foreach p,${REMOVE_PKGS},$p)) $(call parts,${INSTALL_LISTS}) $(foreach p,${INSTALL_PKGS},$p)
-PACKAGES = $(addprefix -,$(call parts,${REMOVE_LISTS})) $(addprefix -,$(foreach p,${REMOVE_PKGS},$p)) $(call parts,${INSTALL_LISTS}) $(filter-out ${comment}, $(foreach p,${INSTALL_PKGS},$p))
-
+PACKAGES = \
+	$(addprefix -,$(call parts,${REMOVE_LISTS})) \
+	$(addprefix -,$(foreach p,${REMOVE_PKGS},$p)) \
+	$(call parts,${INSTALL_LISTS}) \
+	$(filter-out ${comment}, $(foreach p,${INSTALL_PKGS},$p))
+#	$(foreach p,${INSTALL_PKGS},$p)
 
 all: image
 
@@ -68,7 +71,11 @@ files: ${FILES}
 
 
 $C/${image}: ${BUILDDIR}/${imagebuilder} ${FILES} ${DEPS}
-	umask 022; $(MAKE) -C $< image PROFILE=${PLATFORM} PACKAGES="${PACKAGES}" FILES=${FILES} CONFIG_DOWNLOAD_FOLDER=$(realpath ${CACHE})/${INSTRUCTION_SET}
+	umask 022; $(MAKE) -C $< image \
+		PROFILE=${PLATFORM} \
+		PACKAGES="${PACKAGES}" \
+		FILES=${FILES} \
+		CONFIG_DOWNLOAD_FOLDER=$(realpath ${CACHE})/${INSTRUCTION_SET}
 	cp ${BUILDDIR}/${imagebuilder}/bin/targets/${TARGET}/${SUBTARGET}/${image} $@
 ifndef LEAVE_BUILD
 	rm -rf ${BUILDDIR}
@@ -77,7 +84,9 @@ else
 endif
 
 copy: $C/${image}
-	$(foreach h,${HOSTS},scp ${SCPOPTS} $< $h:/tmp&)
+	$(foreach h,${HOSTS}, \
+		scp ${SCPOPTS} $< $h:/tmp & \
+	)
 
 install: copy
 	$(foreach h,${HOSTS},ssh $h sysupgrade -v /tmp/${image}&)
