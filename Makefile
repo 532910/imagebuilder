@@ -88,8 +88,11 @@ copy: $C/${image}
 		scp ${SCPOPTS} $< $h:/tmp & \
 	)
 
-install: copy
-	$(foreach h,${HOSTS},ssh $h sysupgrade -v /tmp/${image}&)
+install: $C/${image}
+	$(foreach h,${HOSTS}, ( \
+		scp ${SCPOPTS} $< $h:/tmp && \
+		ssh $h sysupgrade -v /tmp/${image} \
+	)& )
 
 .PHONY: copy listpks image
 .SECONDARY: ${BUILDDIR} ${BUILDDIR}/${imagebuilder} ${FILES}
