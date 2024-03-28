@@ -14,7 +14,7 @@ files = files
 
 CACHE = cache/${RELEASE}
 DOWNLOADS_BASE = https://downloads.openwrt.org/releases/${RELEASE}/targets/${TARGET}/${SUBTARGET}
-INSTRUCTION_SET = $(shell curl -s ${DOWNLOADS_BASE}/profiles.json | jq -r .arch_packages)
+INSTRUCTION_SET = $(shell curl --silent ${DOWNLOADS_BASE}/profiles.json | jq --raw-output .arch_packages)
 
 CONFIGS = config.mk $C/config.mk
 DEPS += $(shell find ${files} -type f,l)
